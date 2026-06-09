@@ -16,3 +16,18 @@
 直接打开 `index.html` 可以使用主要功能。
 
 如果要在手机上安装为本地 App，需要通过本地网页服务或 HTTPS 打开一次，让 Service Worker 完成缓存。
+
+## 发布到手机可访问的 GitHub Pages
+
+1. 在 GitHub 新建一个空仓库，例如 `english-speaking-app`。
+2. 把本项目推送到仓库的 `main` 分支。
+3. 打开仓库的 `Settings` -> `Pages`。
+4. Source 选择 `Deploy from a branch`。
+5. Branch 选择 `main`，目录选择 `/root`，保存。
+6. 几分钟后，用手机打开 GitHub Pages 地址，例如：
+
+```text
+https://你的用户名.github.io/english-speaking-app/
+```
+
+第一次联网打开后，手机浏览器可以把核心课程缓存下来。YouTube 视频仍然需要联网。
