@@ -47,6 +47,48 @@ const state = {
   hardOnly: false,
 };
 
+const ipaAudioFiles = {
+  "/i/": "Close front unrounded vowel.ogg",
+  "/ɪ/": "Near-close near-front unrounded vowel.ogg",
+  "/ɛ/": "Open-mid front unrounded vowel.ogg",
+  "/æ/": "Near-open front unrounded vowel.ogg",
+  "/ɑ/": "Open back unrounded vowel.ogg",
+  "/ɔ/": "Open-mid back rounded vowel.ogg",
+  "/ʌ/": "Open-mid back unrounded vowel.ogg",
+  "/ə/": "Mid-central vowel.ogg",
+  "/ʊ/": "Near-close near-back rounded vowel.ogg",
+  "/u/": "Close back rounded vowel.ogg",
+  "/eɪ/": ["Open-mid front unrounded vowel.ogg", "Close front unrounded vowel.ogg"],
+  "/oʊ/": ["Open-mid back rounded vowel.ogg", "Close back rounded vowel.ogg"],
+  "/aɪ/": ["Open back unrounded vowel.ogg", "Close front unrounded vowel.ogg"],
+  "/aʊ/": ["Open back unrounded vowel.ogg", "Close back rounded vowel.ogg"],
+  "/ɔɪ/": ["Open-mid back rounded vowel.ogg", "Close front unrounded vowel.ogg"],
+  "/p/": "Voiceless bilabial plosive.ogg",
+  "/b/": "Voiced bilabial plosive.ogg",
+  "/t/": "Voiceless alveolar plosive.ogg",
+  "/d/": "Voiced alveolar plosive.ogg",
+  "/k/": "Voiceless velar plosive.ogg",
+  "/g/": "Voiced velar plosive.ogg",
+  "/f/": "Voiceless labiodental fricative.ogg",
+  "/v/": "Voiced labiodental fricative.ogg",
+  "/θ/": "Voiceless dental fricative.ogg",
+  "/ð/": "Voiced dental fricative.ogg",
+  "/s/": "Voiceless alveolar fricative.ogg",
+  "/z/": "Voiced alveolar fricative.ogg",
+  "/ʃ/": "Voiceless postalveolar fricative.ogg",
+  "/ʒ/": "Voiced postalveolar fricative.ogg",
+  "/h/": "Voiceless glottal fricative.ogg",
+  "/tʃ/": "Voiceless palato-alveolar affricate.ogg",
+  "/dʒ/": "Voiced palato-alveolar affricate.ogg",
+  "/m/": "Bilabial nasal.ogg",
+  "/n/": "Alveolar nasal.ogg",
+  "/ŋ/": "Velar nasal.ogg",
+  "/l/": "Alveolar lateral approximant.ogg",
+  "/ɹ/": "Alveolar approximant.ogg",
+  "/j/": "Palatal approximant.ogg",
+  "/w/": "Voiced labio-velar approximant.ogg"
+};
+
 const els = {
   list: document.querySelector("#soundList"),
   category: document.querySelector("#category"),
@@ -64,96 +106,7 @@ const els = {
   reviewHardBtn: document.querySelector("#reviewHardBtn"),
 };
 
-let audioCtx;
-
-function getAudioContext() {
-  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  return audioCtx;
-}
-
-const voiceCues = {
-  "/i/": "ee",
-  "/ɪ/": "ih",
-  "/ɛ/": "eh",
-  "/æ/": "aah",
-  "/ɑ/": "ah",
-  "/ɔ/": "aw",
-  "/ʌ/": "uh",
-  "/ə/": "uh",
-  "/ʊ/": "uuh",
-  "/u/": "oo",
-  "/eɪ/": "ay",
-  "/oʊ/": "oh",
-  "/aɪ/": "eye",
-  "/aʊ/": "ow",
-  "/ɔɪ/": "oy",
-  "/ɚ/": "er",
-  "/ɝ/": "err",
-  "/p/": "puh",
-  "/b/": "buh",
-  "/t/": "tuh",
-  "/d/": "duh",
-  "/k/": "kuh",
-  "/g/": "guh",
-  "/f/": "fff",
-  "/v/": "vvv",
-  "/θ/": "thhh",
-  "/ð/": "thuh",
-  "/s/": "sss",
-  "/z/": "zzz",
-  "/ʃ/": "shhh",
-  "/ʒ/": "zhhh",
-  "/h/": "hhh",
-  "/tʃ/": "chuh",
-  "/dʒ/": "juh",
-  "/m/": "mmm",
-  "/n/": "nnn",
-  "/ŋ/": "ng",
-  "/l/": "lll",
-  "/ɹ/": "rrr",
-  "/j/": "yyy",
-  "/w/": "www"
-};
-
-function getEnglishVoice() {
-  const voices = window.speechSynthesis?.getVoices?.() || [];
-  return (
-    voices.find((voice) => voice.lang === "en-US" && /female|samantha|zira|google/i.test(voice.name)) ||
-    voices.find((voice) => voice.lang === "en-US") ||
-    voices.find((voice) => voice.lang?.startsWith("en")) ||
-    null
-  );
-}
-
-async function speakCue(sound = getSound(), options = {}) {
-  if (!("speechSynthesis" in window)) {
-    playFallbackTone(sound, options);
-    return;
-  }
-  await unlockAudio();
-  window.speechSynthesis.cancel();
-  const utterance = new SpeechSynthesisUtterance(voiceCues[sound.symbol] || sound.symbol.replaceAll("/", ""));
-  utterance.lang = "en-US";
-  utterance.voice = getEnglishVoice();
-  utterance.rate = options.slow ? 0.45 : 0.68;
-  utterance.pitch = 1;
-  utterance.volume = 1;
-  window.speechSynthesis.speak(utterance);
-}
-
-async function unlockAudio() {
-  const ctx = getAudioContext();
-  if (ctx.state === "suspended") await ctx.resume();
-
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  gain.gain.value = 0.0001;
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start();
-  osc.stop(ctx.currentTime + 0.02);
-  return ctx;
-}
+let currentAudio;
 
 function getVisibleSounds() {
   return state.hardOnly ? sounds.filter((sound) => sound.hard) : sounds;
@@ -194,6 +147,11 @@ function renderCurrent() {
   els.chinaTip.textContent = sound.tip;
   els.contrastText.textContent = `${sound.symbol} vs ${sound.contrast}：先听差别，再模仿口型。`;
   els.mouthStage.innerHTML = renderMouth(sound);
+  const hasAudio = Boolean(ipaAudioFiles[sound.symbol]);
+  els.playBtn.disabled = !hasAudio;
+  els.slowBtn.disabled = !hasAudio;
+  els.repeatBtn.disabled = !hasAudio;
+  els.playBtn.textContent = hasAudio ? "播放真实 IPA 录音" : "暂无可靠录音";
   localStorage.setItem("ipa-only-index", String(state.index));
 }
 
@@ -202,104 +160,44 @@ function renderAll() {
   renderCurrent();
 }
 
-function formantVoice(sound, startTime, duration, slow = false) {
-  const ctx = getAudioContext();
-  const output = ctx.createGain();
-  output.gain.setValueAtTime(0.0001, startTime);
-  output.gain.exponentialRampToValueAtTime(0.18, startTime + 0.025);
-  output.gain.setValueAtTime(0.18, startTime + duration - 0.06);
-  output.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
-  output.connect(ctx.destination);
+function audioUrl(fileName) {
+  return `https://commons.wikimedia.org/wiki/Special:Redirect/file/${encodeURIComponent(fileName)}`;
+}
 
-  const source = ctx.createOscillator();
-  source.type = "sawtooth";
-  source.frequency.setValueAtTime(slow ? 125 : 145, startTime);
-  source.connect(output);
-
-  sound.audio.f.forEach((freq, index) => {
-    const filter = ctx.createBiquadFilter();
-    filter.type = "bandpass";
-    filter.frequency.setValueAtTime(freq, startTime);
-    filter.Q.setValueAtTime(index === 0 ? 8 : 11, startTime);
-    const gain = ctx.createGain();
-    gain.gain.setValueAtTime(index === 0 ? 0.75 : index === 1 ? 0.45 : 0.25, startTime);
-    source.connect(filter);
-    filter.connect(gain);
-    gain.connect(output);
+function playOneAudioFile(fileName, speed = 1) {
+  return new Promise((resolve, reject) => {
+    if (currentAudio) {
+      currentAudio.pause();
+      currentAudio = null;
+    }
+    const audio = new Audio(audioUrl(fileName));
+    currentAudio = audio;
+    audio.playbackRate = speed;
+    audio.onended = resolve;
+    audio.onerror = reject;
+    audio.play().catch(reject);
   });
-
-  source.start(startTime);
-  source.stop(startTime + duration);
 }
 
-function noiseBurst(startTime, duration, band = 4500, gainValue = 0.16) {
-  const ctx = getAudioContext();
-  const buffer = ctx.createBuffer(1, ctx.sampleRate * duration, ctx.sampleRate);
-  const data = buffer.getChannelData(0);
-  for (let i = 0; i < data.length; i += 1) data[i] = Math.random() * 2 - 1;
-  const source = ctx.createBufferSource();
-  source.buffer = buffer;
-  const filter = ctx.createBiquadFilter();
-  filter.type = "bandpass";
-  filter.frequency.setValueAtTime(band, startTime);
-  filter.Q.setValueAtTime(3, startTime);
-  const gain = ctx.createGain();
-  gain.gain.setValueAtTime(0.0001, startTime);
-  gain.gain.exponentialRampToValueAtTime(gainValue, startTime + 0.01);
-  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
-  source.connect(filter);
-  filter.connect(gain);
-  gain.connect(ctx.destination);
-  source.start(startTime);
-}
-
-function voiceHum(startTime, duration, freq = 140, gainValue = 0.08) {
-  const ctx = getAudioContext();
-  const osc = ctx.createOscillator();
-  const gain = ctx.createGain();
-  osc.type = "sawtooth";
-  osc.frequency.setValueAtTime(freq, startTime);
-  gain.gain.setValueAtTime(0.0001, startTime);
-  gain.gain.exponentialRampToValueAtTime(gainValue, startTime + 0.015);
-  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + duration);
-  osc.connect(gain);
-  gain.connect(ctx.destination);
-  osc.start(startTime);
-  osc.stop(startTime + duration);
-}
-
-async function playFallbackTone(sound = getSound(), options = {}) {
-  const ctx = await unlockAudio();
-  const now = ctx.currentTime + 0.04;
-  const duration = options.slow ? 0.95 : 0.58;
-  const audio = sound.audio;
-
-  if (audio.type === "vowel") {
-    formantVoice(sound, now, duration, options.slow);
-  } else if (audio.type === "diphthong") {
-    formantVoice(findSound(audio.from), now, duration * 0.55, options.slow);
-    formantVoice(findSound(audio.to), now + duration * 0.45, duration * 0.55, options.slow);
-  } else if (audio.type === "stop") {
-    if (audio.voiced) voiceHum(now, 0.16, 135, 0.07);
-    noiseBurst(now + 0.08, 0.09, audio.contact === "back" ? 1800 : 4200, 0.2);
-  } else if (audio.type === "fricative") {
-    if (audio.voiced) voiceHum(now, duration, 135, 0.05);
-    noiseBurst(now, duration, audio.band, 0.14);
-  } else if (audio.type === "affricate") {
-    if (audio.voiced) voiceHum(now, duration, 135, 0.05);
-    noiseBurst(now + 0.08, duration * 0.65, audio.voiced ? 3000 : 3600, 0.17);
-  } else if (audio.type === "nasal") {
-    voiceHum(now, duration, audio.f, 0.13);
-  } else if (audio.type === "liquid") {
-    const temp = { audio: { type: "vowel", f: audio.f } };
-    formantVoice(temp, now, duration, options.slow);
-  } else if (audio.type === "glide") {
-    formantVoice(findSound(audio.base), now, duration * 0.38, options.slow);
+async function playSound(sound = getSound(), options = {}) {
+  const file = ipaAudioFiles[sound.symbol];
+  if (!file) {
+    alert("这个音暂时没有找到可靠的标准 IPA 录音，我不会用假声音替代。");
+    return;
   }
-}
-
-function playSound(sound = getSound(), options = {}) {
-  return speakCue(sound, options);
+  const speed = options.slow ? 0.72 : 1;
+  try {
+    if (Array.isArray(file)) {
+      for (const item of file) {
+        await playOneAudioFile(item, speed);
+        await new Promise((resolve) => setTimeout(resolve, 120));
+      }
+    } else {
+      await playOneAudioFile(file, speed);
+    }
+  } catch (error) {
+    alert("音频加载失败。请确认网络可用，或稍后再试。");
+  }
 }
 
 function repeatSound(times = 5) {
@@ -397,3 +295,4 @@ if ("serviceWorker" in navigator && location.protocol !== "file:") {
 }
 
 renderAll();
+
