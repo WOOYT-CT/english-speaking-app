@@ -71,6 +71,76 @@ function getAudioContext() {
   return audioCtx;
 }
 
+const voiceCues = {
+  "/i/": "ee",
+  "/ɪ/": "ih",
+  "/ɛ/": "eh",
+  "/æ/": "aah",
+  "/ɑ/": "ah",
+  "/ɔ/": "aw",
+  "/ʌ/": "uh",
+  "/ə/": "uh",
+  "/ʊ/": "uuh",
+  "/u/": "oo",
+  "/eɪ/": "ay",
+  "/oʊ/": "oh",
+  "/aɪ/": "eye",
+  "/aʊ/": "ow",
+  "/ɔɪ/": "oy",
+  "/ɚ/": "er",
+  "/ɝ/": "err",
+  "/p/": "puh",
+  "/b/": "buh",
+  "/t/": "tuh",
+  "/d/": "duh",
+  "/k/": "kuh",
+  "/g/": "guh",
+  "/f/": "fff",
+  "/v/": "vvv",
+  "/θ/": "thhh",
+  "/ð/": "thuh",
+  "/s/": "sss",
+  "/z/": "zzz",
+  "/ʃ/": "shhh",
+  "/ʒ/": "zhhh",
+  "/h/": "hhh",
+  "/tʃ/": "chuh",
+  "/dʒ/": "juh",
+  "/m/": "mmm",
+  "/n/": "nnn",
+  "/ŋ/": "ng",
+  "/l/": "lll",
+  "/ɹ/": "rrr",
+  "/j/": "yyy",
+  "/w/": "www"
+};
+
+function getEnglishVoice() {
+  const voices = window.speechSynthesis?.getVoices?.() || [];
+  return (
+    voices.find((voice) => voice.lang === "en-US" && /female|samantha|zira|google/i.test(voice.name)) ||
+    voices.find((voice) => voice.lang === "en-US") ||
+    voices.find((voice) => voice.lang?.startsWith("en")) ||
+    null
+  );
+}
+
+async function speakCue(sound = getSound(), options = {}) {
+  if (!("speechSynthesis" in window)) {
+    playFallbackTone(sound, options);
+    return;
+  }
+  await unlockAudio();
+  window.speechSynthesis.cancel();
+  const utterance = new SpeechSynthesisUtterance(voiceCues[sound.symbol] || sound.symbol.replaceAll("/", ""));
+  utterance.lang = "en-US";
+  utterance.voice = getEnglishVoice();
+  utterance.rate = options.slow ? 0.45 : 0.68;
+  utterance.pitch = 1;
+  utterance.volume = 1;
+  window.speechSynthesis.speak(utterance);
+}
+
 async function unlockAudio() {
   const ctx = getAudioContext();
   if (ctx.state === "suspended") await ctx.resume();
@@ -198,7 +268,7 @@ function voiceHum(startTime, duration, freq = 140, gainValue = 0.08) {
   osc.stop(startTime + duration);
 }
 
-async function playSound(sound = getSound(), options = {}) {
+async function playFallbackTone(sound = getSound(), options = {}) {
   const ctx = await unlockAudio();
   const now = ctx.currentTime + 0.04;
   const duration = options.slow ? 0.95 : 0.58;
@@ -226,6 +296,10 @@ async function playSound(sound = getSound(), options = {}) {
   } else if (audio.type === "glide") {
     formantVoice(findSound(audio.base), now, duration * 0.38, options.slow);
   }
+}
+
+function playSound(sound = getSound(), options = {}) {
+  return speakCue(sound, options);
 }
 
 function repeatSound(times = 5) {
