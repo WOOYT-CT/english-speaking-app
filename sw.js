@@ -2,6 +2,7 @@ const CACHE_NAME = "american-ipa-only-v1";
 const APP_SHELL = [
   "./",
   "./index.html",
+  "./reset.html",
   "./styles.css",
   "./app.js",
   "./manifest.json",
