@@ -3,209 +3,106 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>开口英语 | 30 天零基础口语</title>
-    <meta name="theme-color" content="#1f8a83" />
+    <title>美式音标 | 只练发音</title>
+    <meta name="theme-color" content="#146c63" />
     <link rel="manifest" href="manifest.json" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="app-shell">
-      <aside class="sidebar" aria-label="30 天课程导航">
-        <div class="brand">
-          <div class="brand-mark">E</div>
-          <div>
-            <p class="eyebrow">30 天口语计划</p>
-            <h1>开口英语</h1>
-          </div>
+    <main class="app">
+      <section class="hero">
+        <div>
+          <p class="eyebrow">American sounds first</p>
+          <h1>美式音标，只练“音”本身。</h1>
+          <p class="lead">
+            不读单词，不背长句。先听清每个音、看懂口型、再做中国学习者最容易混淆的对比练习。
+          </p>
         </div>
-
-        <div class="month-summary">
-          <strong>每天 15 分钟</strong>
-          <span>听 2 遍 · 跟读 3 遍 · 录音 1 遍 · 复盘 1 句</span>
+        <div class="daily-card">
+          <strong>建议顺序</strong>
+          <span>元音 → 双元音 → th/r/l → 辅音 → 混淆对比</span>
         </div>
+      </section>
 
-        <nav class="lesson-list" id="lessonList" aria-label="选择天数"></nav>
+      <section class="method">
+        <article>
+          <span>1</span>
+          <strong>先口型</strong>
+          <p>看嘴唇、舌头、下巴和气流，不急着看拼写。</p>
+        </article>
+        <article>
+          <span>2</span>
+          <strong>只听单音</strong>
+          <p>按钮播放的是音本身，不播放单词，减少干扰。</p>
+        </article>
+        <article>
+          <span>3</span>
+          <strong>做对比</strong>
+          <p>中国学习者优先练 /i/-/ɪ/、/u/-/ʊ/、/ɛ/-/æ/、/ɹ/-/l/。</p>
+        </article>
+        <article>
+          <span>4</span>
+          <strong>每天少量</strong>
+          <p>每天 8 个音，每个音听 5 次、模仿 5 次。</p>
+        </article>
+      </section>
 
-        <section class="progress-panel" aria-label="今日进度">
-          <div>
-            <span class="progress-label">累计开口</span>
-            <strong id="todayCount">0</strong>
+      <section class="trainer">
+        <aside class="sound-menu" aria-label="音标列表">
+          <div class="menu-head">
+            <h2>音标表</h2>
+            <button id="reviewHardBtn" type="button">中国人重点</button>
           </div>
-          <div class="progress-track">
-            <span id="progressBar"></span>
-          </div>
-          <p>一个月目标：至少开口 300 次。每次短一点也可以，但要真的说出来。</p>
-        </section>
-      </aside>
+          <div id="soundList" class="sound-list"></div>
+        </aside>
 
-      <main class="main">
-        <section class="phonics-lab" aria-label="音标入门">
-          <div class="phonics-head">
+        <section class="sound-card" aria-live="polite">
+          <div class="sound-top">
             <div>
-              <p class="eyebrow">Start with sounds</p>
-              <h3>美式音标入门：先学完整声音表</h3>
-              <p>
-                这里按美式口语常见音位整理：元音、双元音、r 化元音、辅音、重音和连读。
-                每个音都标出常见拼写提示，例如 /u/ 常见于 oo、ue、u_e。不同词典符号可能略有差异，练习时以声音为准。
-                这不是 IPA 的全世界符号表，而是零基础学美式英语口语需要先掌握的完整入门表。
-              </p>
+              <p class="category" id="category">元音</p>
+              <h2 id="symbol">/i/</h2>
+              <p id="name">紧衣音</p>
             </div>
-            <div class="phonics-badge">完整入门表</div>
+            <div class="sound-map" id="soundMap">对应：ee / ea 的常见音</div>
           </div>
 
-          <div class="sound-grid">
-            <div class="sound-list" id="soundList" aria-label="选择音标"></div>
-            <div class="sound-card">
-              <div class="sound-symbol" id="soundSymbol">/i/</div>
-              <div>
-                <h4 id="soundName">紧衣音</h4>
-                <p class="sound-cue" id="soundCue">常见拼写：ee, ea, e</p>
-                <p id="soundMouth">嘴角微微向两边，声音清楚稳定。</p>
-              </div>
-              <div class="mouth-picture" id="mouthPicture" aria-label="发音口型图片"></div>
-              <div class="sound-actions">
-                <button id="playSoundBtn" type="button">听这个音</button>
-                <button id="playExamplesBtn" type="button">听例词</button>
-              </div>
-              <div class="example-row" id="soundExamples"></div>
-              <div class="articulation-grid" id="articulationGrid" aria-label="口型动作"></div>
-              <ol class="sound-steps" id="soundSteps"></ol>
-            </div>
-          </div>
-        </section>
+          <div class="mouth-stage" id="mouthStage" aria-label="发音口型图"></div>
 
-        <section class="hero">
-          <div class="hero-copy">
-            <p class="eyebrow">Speaking first</p>
-            <h2>一个月，把英语从“看得懂”练到“敢开口”。</h2>
-            <p>
-              课程按“听力输入、模仿跟读、录音对比、真实场景、每日复盘”设计。
-              你不用一开始就学复杂语法，先把生活中高频句说顺。
-            </p>
-            <div class="quick-actions">
-              <button class="primary" id="startLessonBtn" type="button">播放今日句</button>
-              <button class="ghost" id="randomPhraseBtn" type="button">随机复习</button>
-            </div>
+          <div class="controls">
+            <button class="primary" id="playBtn" type="button">播放这个音</button>
+            <button id="slowBtn" type="button">慢速播放</button>
+            <button id="repeatBtn" type="button">重复 5 次</button>
           </div>
-          <img src="assets/speaking-practice.png" alt="英语口语练习插画" />
-        </section>
 
-        <section class="method-panel" aria-label="学习方法">
-          <div>
-            <span>1</span>
-            <strong>先听</strong>
-            <p>短音频反复听，注意连读、重音、语调。</p>
-          </div>
-          <div>
-            <span>2</span>
-            <strong>模仿</strong>
-            <p>像影子一样跟读，不急着翻译每个词。</p>
-          </div>
-          <div>
-            <span>3</span>
-            <strong>录音</strong>
-            <p>说完听自己，和原句对比，改一个点。</p>
-          </div>
-          <div>
-            <span>4</span>
-            <strong>使用</strong>
-            <p>每天把一句话换成自己的真实信息。</p>
-          </div>
-        </section>
-
-        <section class="video-panel" aria-label="YouTube 视频跟学">
-          <div class="video-head">
+          <div class="details">
             <div>
-              <p class="eyebrow">Online videos</p>
-              <h3>YouTube 视频跟学</h3>
-              <p>这些资源适合联网时看。路上没网时，仍然可以使用本 App 里的音标、口型图、30 天课程和录音练习。</p>
-            </div>
-            <span>联网可用</span>
-          </div>
-          <div class="video-list" id="videoList"></div>
-        </section>
-
-        <section class="offline-panel" aria-label="手机离线使用">
-          <h3>手机本地使用</h3>
-          <div class="offline-steps">
-            <div>
-              <strong>1. 先通过网页服务打开</strong>
-              <p>手机安装离线 App 不能直接从 file:// 完成，需要用 HTTPS、localhost 或同一 Wi-Fi 下的本地地址打开一次。</p>
+              <strong>口型动作</strong>
+              <p id="mouthText">嘴角展开，舌头高、靠前，下巴较高。</p>
             </div>
             <div>
-              <strong>2. 添加到主屏幕</strong>
-              <p>iPhone 用 Safari 的“分享 → 添加到主屏幕”；Android 用 Chrome 的“安装应用”或“添加到主屏幕”。</p>
+              <strong>中国学习者提醒</strong>
+              <p id="chinaTip">不要把 /i/ 和 /ɪ/ 都读成中文“衣”。</p>
             </div>
+          </div>
+
+          <section class="contrast">
             <div>
-              <strong>3. 路上离线学习</strong>
-              <p>音标、口型图、30 天课程会缓存到手机。YouTube 视频仍需要联网。</p>
+              <strong>最容易混淆</strong>
+              <p id="contrastText">/i/ vs /ɪ/：一个紧，一个松。</p>
             </div>
-          </div>
+            <button id="contrastBtn" type="button">播放对比</button>
+          </section>
         </section>
+      </section>
 
-        <section class="workspace">
-          <div class="practice-pane">
-            <div class="pane-header">
-              <div>
-                <p class="eyebrow" id="lessonKicker">Day 1</p>
-                <h3 id="lessonTitle">问候与破冰</h3>
-              </div>
-              <div class="level-pill" id="lessonLevel">A0</div>
-            </div>
-
-            <div class="mission-card">
-              <strong id="lessonFocus">今日目标</strong>
-              <p id="lessonTask">能自然说出第一句问候，并完成一次自我录音。</p>
-            </div>
-
-            <article class="phrase-card" aria-live="polite">
-              <p class="phrase-cn" id="phraseCn">你好，很高兴认识你。</p>
-              <p class="phrase-en" id="phraseEn">Hi, nice to meet you.</p>
-              <p class="phrase-tip" id="phraseTip">把 nice to 连起来读，像 “nice-tə”。</p>
-            </article>
-
-            <div class="controls" aria-label="口语练习控制">
-              <button id="listenBtn" type="button">原速听</button>
-              <button id="slowBtn" type="button">慢速听</button>
-              <button id="recordBtn" class="accent" type="button">录音跟读</button>
-              <button id="nextBtn" type="button">下一句</button>
-            </div>
-
-            <div class="feedback" id="feedback">
-              <div class="score-ring" id="scoreRing">--</div>
-              <div>
-                <strong id="feedbackTitle">准备好后，先听一遍。</strong>
-                <p id="feedbackText">录音后会显示识别结果和改进建议。</p>
-              </div>
-            </div>
-          </div>
-
-          <div class="side-stack">
-            <section class="dialogue-box">
-              <div class="pane-header compact">
-                <h3>今日情景对话</h3>
-                <button id="playDialogueBtn" type="button">播放</button>
-              </div>
-              <div class="dialogue" id="dialogue"></div>
-            </section>
-
-            <section class="word-bank">
-              <div class="pane-header compact">
-                <h3>重点词块</h3>
-                <button id="resetProgressBtn" type="button">清零</button>
-              </div>
-              <div class="chips" id="chips"></div>
-            </section>
-
-            <section class="reflection-box">
-              <h3>今日复盘</h3>
-              <p id="reflectionPrompt">哪一个词最难说？明天先练它。</p>
-              <textarea id="reflectionNote" rows="5" placeholder="写下你的复盘：例如 I said it slowly today."></textarea>
-            </section>
-          </div>
-        </section>
-      </main>
-    </div>
+      <section class="source-note">
+        <h2>学习法依据</h2>
+        <p>
+          这版采用“口型优先、单音隔离、最小对比、中国学习者难点优先”的顺序。
+          IPA 只作为声音标签，真正练习以声音和口型为准。
+        </p>
+      </section>
+    </main>
 
     <script src="app.js"></script>
   </body>

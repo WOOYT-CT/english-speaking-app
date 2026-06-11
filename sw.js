@@ -1,12 +1,11 @@
-const CACHE_NAME = "open-english-v1";
+const CACHE_NAME = "american-ipa-only-v1";
 const APP_SHELL = [
   "./",
   "./index.html",
   "./styles.css",
   "./app.js",
   "./manifest.json",
-  "./assets/app-icon.svg",
-  "./assets/speaking-practice.png"
+  "./assets/app-icon.svg"
 ];
 
 self.addEventListener("install", (event) => {
