@@ -1,4 +1,4 @@
-const CACHE_NAME = "american-ipa-only-v1";
+const CACHE_NAME = "american-ipa-only-v2";
 const APP_SHELL = [
   "./",
   "./index.html",

@@ -71,6 +71,20 @@ function getAudioContext() {
   return audioCtx;
 }
 
+async function unlockAudio() {
+  const ctx = getAudioContext();
+  if (ctx.state === "suspended") await ctx.resume();
+
+  const osc = ctx.createOscillator();
+  const gain = ctx.createGain();
+  gain.gain.value = 0.0001;
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start();
+  osc.stop(ctx.currentTime + 0.02);
+  return ctx;
+}
+
 function getVisibleSounds() {
   return state.hardOnly ? sounds.filter((sound) => sound.hard) : sounds;
 }
@@ -184,8 +198,8 @@ function voiceHum(startTime, duration, freq = 140, gainValue = 0.08) {
   osc.stop(startTime + duration);
 }
 
-function playSound(sound = getSound(), options = {}) {
-  const ctx = getAudioContext();
+async function playSound(sound = getSound(), options = {}) {
+  const ctx = await unlockAudio();
   const now = ctx.currentTime + 0.04;
   const duration = options.slow ? 0.95 : 0.58;
   const audio = sound.audio;
