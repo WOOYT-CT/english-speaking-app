@@ -1,8 +1,7 @@
-const CACHE_NAME = "american-ipa-only-v5";
+const CACHE_NAME = "american-ipa-only-v6";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./reset.html",
   "./styles.css",
   "./app-audio.js",
   "./manifest.json",
